@@ -159,7 +159,7 @@ for epochIdx in range(1000):
     if (historyA[-1] > historyB[-1]):
       historyA = autoencoderModelA.fit(trainA, trainA, epochs=1)
       historyB = autoencoderModelB.fit(trainB, trainB, epochs=epochsPerIteration)
-  else:
+    else:
       historyA = autoencoderModelA.fit(trainA, trainA, epochs=epochsPerIteration)
       historyB = autoencoderModelB.fit(trainB, trainB, epochs=1)
 
