@@ -20,12 +20,12 @@ def BuildEncoder(latentDim, imageWidth, imageHeight):
     #encLayer3 = tf.keras.layers.Conv2D(100, (3, 3), activation="relu")
     #encLayer4 = tf.keras.layers.MaxPooling2D((4, 4))
     encFlatten = tf.keras.layers.Flatten()
-    encDropout = tf.keras.layers.Dropout(0.05)
+    encDropout = tf.keras.layers.Dropout(0.2)
     #encLayer5 = tf.keras.layers.Dense(75,\
     #                                  kernel_regularizer=tf.keras.regularizers.l1(0.01),\
     #                                  activity_regularizer=tf.keras.regularizers.l2(0.01),\
     #                                  activation="relu")
-    #encLayer6 = tf.keras.layers.Dense(200, activation="relu")
+    encLayer6 = tf.keras.layers.Dense(200, activation="relu")
     latentFeatureLayer = tf.keras.layers.Dense(latentDim, activation="relu")
 
     # Build the actual model
@@ -37,7 +37,7 @@ def BuildEncoder(latentDim, imageWidth, imageHeight):
                                         encFlatten,\
                                         encDropout,\
                                         #encLayer5,\
-                                        #encLayer6,\
+                                        encLayer6,\
                                         latentFeatureLayer])
 
     return model
@@ -55,15 +55,15 @@ def BuildDecoder(latentDim, imageWidth, imageHeight):
 
     latentInputLayer = tf.keras.layers.Input(shape=(latentDim,))
     decLayer1 = tf.keras.layers.Dense(colorChannels*subWidth1*subHeight1,\
-                                      #kernel_regularizer=tf.keras.regularizers.l1(0.01),\
-                                      #activity_regularizer=tf.keras.regularizers.l2(0.01),\
+                                      kernel_regularizer=tf.keras.regularizers.l1(0.01),\
+                                      activity_regularizer=tf.keras.regularizers.l2(0.01),\
                                       activation="relu")
-    decDropout = tf.keras.layers.Dropout(0.01)
+    decDropout = tf.keras.layers.Dropout(0.2)
     decLayer2 = tf.keras.layers.Reshape( (subWidth1, subHeight1, colorChannels) )
     decLayer3 = tf.keras.layers.UpSampling3D( (upScale1, upScale1, 1) )
     outputLayer = tf.keras.layers.Conv2D(colorChannels, (4, 4), padding="same",\
                                       kernel_regularizer=tf.keras.regularizers.l1(0.01),\
-                                      #activity_regularizer=tf.keras.regularizers.l2(0.01),\
+                                      activity_regularizer=tf.keras.regularizers.l2(0.01),\
                                       activation="sigmoid")
     #decLayer5 = tf.keras.layers.UpSampling3D( (upScale2, upScale2, 1) )
     #outputLayer = tf.keras.layers.Conv2D(colorChannels, (3, 3), padding="same", activation="sigmoid")
@@ -80,7 +80,7 @@ def BuildDecoder(latentDim, imageWidth, imageHeight):
 
     return model
 
-latentDim = 50
+latentDim = 150
 
 ### 1) Get the Data
 
