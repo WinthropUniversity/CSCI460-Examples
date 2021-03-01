@@ -17,27 +17,27 @@ def BuildEncoder(latentDim, imageWidth, imageHeight):
                                       activity_regularizer=tf.keras.regularizers.l2(0.01),\
                                       activation="relu")
     encLayer2 = tf.keras.layers.MaxPooling2D((2, 2))
-    #encLayer3 = tf.keras.layers.Conv2D(100, (3, 3), activation="relu")
-    #encLayer4 = tf.keras.layers.MaxPooling2D((4, 4))
+    encLayer3 = tf.keras.layers.Conv2D(50, (3, 3), activation="relu")
+    encLayer4 = tf.keras.layers.MaxPooling2D((4, 4))
     encFlatten = tf.keras.layers.Flatten()
-    encDropout = tf.keras.layers.Dropout(0.2)
+    encDropout = tf.keras.layers.Dropout(0.05)
     #encLayer5 = tf.keras.layers.Dense(75,\
     #                                  kernel_regularizer=tf.keras.regularizers.l1(0.01),\
     #                                  activity_regularizer=tf.keras.regularizers.l2(0.01),\
     #                                  activation="relu")
-    #encLayer6 = tf.keras.layers.Dense(200, activation="relu")
+    encLayer6 = tf.keras.layers.Dense(latentDim, activation="relu")
     latentFeatureLayer = tf.keras.layers.Dense(latentDim, activation="relu")
 
     # Build the actual model
     model = tf.keras.models.Sequential([inputLayer,\
                                         encLayer1,\
                                         encLayer2,\
-                                        #encLayer3,\
-                                        #encLayer4,\
+                                        encLayer3,\
+                                        encLayer4,\
                                         encFlatten,\
                                         encDropout,\
                                         #encLayer5,\
-                                        #encLayer6,\
+                                        encLayer6,\
                                         latentFeatureLayer])
 
     return model
@@ -80,7 +80,7 @@ def BuildDecoder(latentDim, imageWidth, imageHeight):
 
     return model
 
-latentDim = 200
+latentDim = 100
 
 ### 1) Get the Data
 
