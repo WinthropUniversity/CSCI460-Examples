@@ -158,14 +158,14 @@ lossA = -1
 lossB = -1
 for epochIdx in range(1000):
     #print("Overall Epoch:", epochIdx*epochsPerIteration)
-    if (ha > hb):
+    if (accA > accB):
       historyA = autoencoderModelA.fit(trainA, trainA, epochs=2, verbose=0)
       historyB = autoencoderModelB.fit(trainB, trainB, epochs=epochsPerIteration, verbose=0)
       accA = historyA.history['accuracy'][-1]
       lossA = historyA.history['loss'][-1]
       accB = historyB.history['accuracy'][-1]
       lossB = historyB.history['loss'][-1]
-      print(epochIdx, ":: *A", accA, lossA, "  ::  B", accB, lossB)
+      print(epochIdx, "::  A", accA, lossA, "  :: *B", accB, lossB)
     else:
       historyA = autoencoderModelA.fit(trainA, trainA, epochs=epochsPerIteration, verbose=0)
       historyB = autoencoderModelB.fit(trainB, trainB, epochs=2, verbose=0)
@@ -173,7 +173,7 @@ for epochIdx in range(1000):
       lossA = historyA.history['loss'][-1]
       accB = historyB.history['accuracy'][-1]
       lossB = historyB.history['loss'][-1]
-      print(epochIdx, "::  A", accA, lossA, "  :: *B", accB, lossB)
+      print(epochIdx, ":: *A", accA, lossA, "  ::  B", accB, lossB)
 
 
 #encoderModel.save("encoder.h5")
