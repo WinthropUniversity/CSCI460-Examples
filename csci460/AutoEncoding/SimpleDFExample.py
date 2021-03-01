@@ -46,7 +46,7 @@ def BuildEncoder(latentDim, imageWidth, imageHeight):
 def BuildDecoder(latentDim, imageWidth, imageHeight):
     colorChannels=3
 
-    upScale1 = 4
+    upScale1 = 2
     upScale2 = 1
     subWidth1 = int(imageWidth / (upScale1*upScale2))
     subHeight1 = int(imageHeight / (upScale1*upScale2))
