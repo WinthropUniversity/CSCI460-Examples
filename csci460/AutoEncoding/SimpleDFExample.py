@@ -151,21 +151,30 @@ autoencoderModelB.compile( optimizer="Adam", loss="MAE", metrics=['accuracy'])
 
 # Perform the induction by alternative between the two networks.
 # Each pass, the shared encoder is updated, as is the specific decoder
-epochsPerIteration=10
-ha = 0
-hb = 0
+epochsPerIteration=5
+accA = 0
+accB = 0
+lossA = -1
+lossB = -1
 for epochIdx in range(1000):
-    print("Overall Epoch:", epochIdx*epochsPerIteration)
+    #print("Overall Epoch:", epochIdx*epochsPerIteration)
     if (ha > hb):
-      historyA = autoencoderModelA.fit(trainA, trainA, epochs=1)
-      historyB = autoencoderModelB.fit(trainB, trainB, epochs=epochsPerIteration)
-      ha = historyA.history['accuracy'][-1]
-      hb = historyB.history['accuracy'][-1]
+      historyA = autoencoderModelA.fit(trainA, trainA, epochs=2, verbose=0)
+      historyB = autoencoderModelB.fit(trainB, trainB, epochs=epochsPerIteration, verbose=0)
+      accA = historyA.history['accuracy'][-1]
+      lossA = historyA.history['loss'][-1]
+      accB = historyB.history['accuracy'][-1]
+      lossB = historyB.history['loss'][-1]
+      print(epochIdx, ":: *A", accA, lossA, "  ::  B", accB, lossB)
     else:
-      historyA = autoencoderModelA.fit(trainA, trainA, epochs=epochsPerIteration)
-      historyB = autoencoderModelB.fit(trainB, trainB, epochs=1)
-      ha = historyA.history['accuracy'][-1]
-      hb = historyB.history['accuracy'][-1]
+      historyA = autoencoderModelA.fit(trainA, trainA, epochs=epochsPerIteration, verbose=0)
+      historyB = autoencoderModelB.fit(trainB, trainB, epochs=2, verbose=0)
+      accA = historyA.history['accuracy'][-1]
+      lossA = historyA.history['loss'][-1]
+      accB = historyB.history['accuracy'][-1]
+      lossB = historyB.history['loss'][-1]
+      print(epochIdx, "::  A", accA, lossA, "  :: *B", accB, lossB)
+
 
 #encoderModel.save("encoder.h5")
 #decoderModelA.save("decoderA.h5")
