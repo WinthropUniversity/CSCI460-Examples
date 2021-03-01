@@ -25,7 +25,7 @@ def BuildEncoder(latentDim, imageWidth, imageHeight):
     #                                  kernel_regularizer=tf.keras.regularizers.l1(0.01),\
     #                                  activity_regularizer=tf.keras.regularizers.l2(0.01),\
     #                                  activation="relu")
-    encLayer6 = tf.keras.layers.Dense(300, activation="relu")
+    #encLayer6 = tf.keras.layers.Dense(200, activation="relu")
     latentFeatureLayer = tf.keras.layers.Dense(latentDim, activation="relu")
 
     # Build the actual model
@@ -37,7 +37,7 @@ def BuildEncoder(latentDim, imageWidth, imageHeight):
                                         encFlatten,\
                                         encDropout,\
                                         #encLayer5,\
-                                        encLayer6,\
+                                        #encLayer6,\
                                         latentFeatureLayer])
 
     return model
