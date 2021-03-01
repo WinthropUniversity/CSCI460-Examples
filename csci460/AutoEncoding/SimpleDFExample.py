@@ -156,7 +156,7 @@ accA = 0
 accB = 0
 lossA = -1
 lossB = -1
-for epochIdx in range(1000):
+for epochIdx in range(10000):
     #print("Overall Epoch:", epochIdx*epochsPerIteration)
     if (lossA < lossB):
       historyA = autoencoderModelA.fit(trainA, trainA, epochs=1, verbose=0)
@@ -175,6 +175,8 @@ for epochIdx in range(1000):
       lossB = historyB.history['loss'][-1]
       print(epochIdx, ":: *A", np.round(accA,4), np.round(lossA,4), "  ::  B", np.round(accB,4), np.round(lossB,4))
 
+    if np.min([accA, accB]) > 0.98:
+      break
 
 #encoderModel.save("encoder.h5")
 #decoderModelA.save("decoderA.h5")
