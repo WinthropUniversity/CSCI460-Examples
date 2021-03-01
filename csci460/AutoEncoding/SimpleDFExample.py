@@ -25,7 +25,7 @@ def BuildEncoder(latentDim, imageWidth, imageHeight):
     #                                  kernel_regularizer=tf.keras.regularizers.l1(0.01),\
     #                                  activity_regularizer=tf.keras.regularizers.l2(0.01),\
     #                                  activation="relu")
-    encLayer6 = tf.keras.layers.Dense(200, activation="relu")
+    encLayer6 = tf.keras.layers.Dense(300, activation="relu")
     latentFeatureLayer = tf.keras.layers.Dense(latentDim, activation="relu")
 
     # Build the actual model
@@ -47,7 +47,7 @@ def BuildDecoder(latentDim, imageWidth, imageHeight):
     colorChannels=3
 
     upScale1 = 4
-    upScale2 = 2
+    upScale2 = 1
     subWidth1 = int(imageWidth / (upScale1*upScale2))
     subHeight1 = int(imageHeight / (upScale1*upScale2))
     subWidth2 = int(imageWidth/upScale2)
@@ -58,15 +58,15 @@ def BuildDecoder(latentDim, imageWidth, imageHeight):
                                       kernel_regularizer=tf.keras.regularizers.l1(0.01),\
                                       activity_regularizer=tf.keras.regularizers.l2(0.01),\
                                       activation="relu")
-    decDropout = tf.keras.layers.Dropout(0.2)
+    decDropout = tf.keras.layers.Dropout(0.05)
     decLayer2 = tf.keras.layers.Reshape( (subWidth1, subHeight1, colorChannels) )
     decLayer3 = tf.keras.layers.UpSampling3D( (upScale1, upScale1, 1) )
-    decLayer4 = tf.keras.layers.Conv2D(colorChannels, (4, 4), padding="same",\
+    outputLayer = tf.keras.layers.Conv2D(colorChannels, (4, 4), padding="same",\
                                       kernel_regularizer=tf.keras.regularizers.l1(0.01),\
                                       activity_regularizer=tf.keras.regularizers.l2(0.01),\
                                       activation="sigmoid")
-    decLayer5 = tf.keras.layers.UpSampling3D( (upScale2, upScale2, 1) )
-    outputLayer = tf.keras.layers.Conv2D(colorChannels, (3, 3), padding="same", activation="sigmoid")
+    #decLayer5 = tf.keras.layers.UpSampling3D( (upScale2, upScale2, 1) )
+    #outputLayer = tf.keras.layers.Conv2D(colorChannels, (3, 3), padding="same", activation="sigmoid")
 
     # Build the actual model
     model = tf.keras.models.Sequential([latentInputLayer,\
@@ -74,13 +74,13 @@ def BuildDecoder(latentDim, imageWidth, imageHeight):
                                         decDropout,\
                                         decLayer2,\
                                         decLayer3,\
-                                        decLayer4,\
-                                        decLayer5,\
+                                        #decLayer4,\
+                                        #decLayer5,\
                                         outputLayer])
 
     return model
 
-latentDim = 150
+latentDim = 200
 
 ### 1) Get the Data
 
@@ -151,10 +151,11 @@ autoencoderModelB.compile( optimizer="Adam", loss="MAE", metrics=['accuracy'])
 
 # Perform the induction by alternative between the two networks.
 # Each pass, the shared encoder is updated, as is the specific decoder
+epochsPerIteration=1
 for epochIdx in range(1000):
-    print("Overall Epoch:", epochIdx*3)
-    autoencoderModelA.fit(trainA, trainA, epochs=1)
-    autoencoderModelB.fit(trainB, trainB, epochs=1)
+    print("Overall Epoch:", epochIdx*epochsPerIteration)
+    autoencoderModelA.fit(trainA, trainA, epochs=epochsPerIteration)
+    autoencoderModelB.fit(trainB, trainB, epochs=epochsPerIteration)
 
 #encoderModel.save("encoder.h5")
 #decoderModelA.save("decoderA.h5")
