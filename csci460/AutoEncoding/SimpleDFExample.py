@@ -46,8 +46,8 @@ def BuildEncoder(latentDim, imageWidth, imageHeight):
 def BuildDecoder(latentDim, imageWidth, imageHeight):
     colorChannels=3
 
-    upScale1 = 2
-    upScale2 = 1
+    upScale1 = 4
+    upScale2 = 2
     subWidth1 = int(imageWidth / (upScale1*upScale2))
     subHeight1 = int(imageHeight / (upScale1*upScale2))
     subWidth2 = int(imageWidth/upScale2)
@@ -61,12 +61,12 @@ def BuildDecoder(latentDim, imageWidth, imageHeight):
     decDropout = tf.keras.layers.Dropout(0.2)
     decLayer2 = tf.keras.layers.Reshape( (subWidth1, subHeight1, colorChannels) )
     decLayer3 = tf.keras.layers.UpSampling3D( (upScale1, upScale1, 1) )
-    outputLayer = tf.keras.layers.Conv2D(colorChannels, (4, 4), padding="same",\
+    decLayer4 = tf.keras.layers.Conv2D(colorChannels, (4, 4), padding="same",\
                                       kernel_regularizer=tf.keras.regularizers.l1(0.01),\
                                       activity_regularizer=tf.keras.regularizers.l2(0.01),\
                                       activation="sigmoid")
-    #decLayer5 = tf.keras.layers.UpSampling3D( (upScale2, upScale2, 1) )
-    #outputLayer = tf.keras.layers.Conv2D(colorChannels, (3, 3), padding="same", activation="sigmoid")
+    decLayer5 = tf.keras.layers.UpSampling3D( (upScale2, upScale2, 1) )
+    outputLayer = tf.keras.layers.Conv2D(colorChannels, (3, 3), padding="same", activation="sigmoid")
 
     # Build the actual model
     model = tf.keras.models.Sequential([latentInputLayer,\
@@ -74,8 +74,8 @@ def BuildDecoder(latentDim, imageWidth, imageHeight):
                                         decDropout,\
                                         decLayer2,\
                                         decLayer3,\
-                                        #decLayer4,\
-                                        #decLayer5,\
+                                        decLayer4,\
+                                        decLayer5,\
                                         outputLayer])
 
     return model
@@ -151,10 +151,10 @@ autoencoderModelB.compile( optimizer="Adam", loss="MAE", metrics=['accuracy'])
 
 # Perform the induction by alternative between the two networks.
 # Each pass, the shared encoder is updated, as is the specific decoder
-for epochIdx in range(500):
+for epochIdx in range(1000):
     print("Overall Epoch:", epochIdx*3)
-    autoencoderModelA.fit(trainA, trainA, epochs=2)
-    autoencoderModelB.fit(trainB, trainB, epochs=2)
+    autoencoderModelA.fit(trainA, trainA, epochs=1)
+    autoencoderModelB.fit(trainB, trainB, epochs=1)
 
 #encoderModel.save("encoder.h5")
 #decoderModelA.save("decoderA.h5")
