@@ -158,7 +158,7 @@ lossA = -1
 lossB = -1
 for epochIdx in range(1000):
     #print("Overall Epoch:", epochIdx*epochsPerIteration)
-    if (accA > accB):
+    if (lossA < lossB):
       historyA = autoencoderModelA.fit(trainA, trainA, epochs=1, verbose=0)
       historyB = autoencoderModelB.fit(trainB, trainB, epochs=epochsPerIteration, verbose=0)
       accA = historyA.history['accuracy'][-1]
