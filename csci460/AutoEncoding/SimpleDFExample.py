@@ -165,7 +165,7 @@ for epochIdx in range(1000):
       lossA = historyA.history['loss'][-1]
       accB = historyB.history['accuracy'][-1]
       lossB = historyB.history['loss'][-1]
-      print(epochIdx, "::  A", np.round(accA,4), np.round(lossA,4), "  :: *B", np.round(accB,4), np.round(lossB,4)
+      print(epochIdx, "::  A", np.round(accA,4), np.round(lossA,4), "  :: *B", np.round(accB,4), np.round(lossB,4))
     else:
       historyA = autoencoderModelA.fit(trainA, trainA, epochs=epochsPerIteration, verbose=0)
       historyB = autoencoderModelB.fit(trainB, trainB, epochs=1, verbose=0)
@@ -173,7 +173,7 @@ for epochIdx in range(1000):
       lossA = historyA.history['loss'][-1]
       accB = historyB.history['accuracy'][-1]
       lossB = historyB.history['loss'][-1]
-      print(epochIdx, ":: *A", np.round(accA,4), np.round(lossA,4), "  ::  B", np.round(accB,4), np.round(lossB,4)
+      print(epochIdx, ":: *A", np.round(accA,4), np.round(lossA,4), "  ::  B", np.round(accB,4), np.round(lossB,4))
 
 
 #encoderModel.save("encoder.h5")
