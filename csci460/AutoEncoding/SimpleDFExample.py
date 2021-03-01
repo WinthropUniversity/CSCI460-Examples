@@ -154,7 +154,7 @@ autoencoderModelB.compile( optimizer="Adam", loss="MAE", metrics=['accuracy'])
 epochsPerIteration=10
 historyA = [0]
 historyB = [0]
-for epochIdx in range(000):
+for epochIdx in range(1000):
     print("Overall Epoch:", epochIdx*epochsPerIteration)
     if (historyA[-1] > historyB[-1]):
       historyA = autoencoderModelA.fit(trainA, trainA, epochs=1)
