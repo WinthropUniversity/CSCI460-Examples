@@ -151,10 +151,10 @@ autoencoderModelB.compile( optimizer="Adam", loss="MAE", metrics=['accuracy'])
 
 # Perform the induction by alternative between the two networks.
 # Each pass, the shared encoder is updated, as is the specific decoder
-for epochIdx in range(300):
+for epochIdx in range(500):
     print("Overall Epoch:", epochIdx*3)
-    autoencoderModelA.fit(trainA, trainA, epochs=3)
-    autoencoderModelB.fit(trainB, trainB, epochs=3)
+    autoencoderModelA.fit(trainA, trainA, epochs=2)
+    autoencoderModelB.fit(trainB, trainB, epochs=2)
 
 #encoderModel.save("encoder.h5")
 #decoderModelA.save("decoderA.h5")
