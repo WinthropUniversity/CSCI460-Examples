@@ -62,4 +62,41 @@ def GenerateXOR():
     testX = np.reshape(np.random.uniform(low=-1.0, high=1.0, size=m*2), (m,2))
     testY = 2*((testX[:,0] * testX[:,1]) < 0) - 1
 
-    return (trainX, trainY), (testX, testY)
+    return trainX, trainY, testX, testY
+
+
+
+def GenerateAdder():
+    """
+    This returns a training set and labels for data representing
+    a simple Boolean logic table for the one-bit adder.  It also
+    generates some synthetic "test" data by assuming any point
+    in the top-left or bottom-right quadrants are positive.
+    """
+    # Training instance data
+                      # x1, x2, cin
+    trainX = np.array([ [0, 0, 0],\
+                        [0, 0, 1],\
+                        [0, 1, 0],\
+                        [0, 1, 1],\
+                        [1, 0, 0],\
+                        [1, 0, 1],\
+                        [1, 1, 0],\
+                        [1, 1, 1] ])
+
+    # Labeled output for training data,
+                       # ans, cout
+    trainY = np.array([ [0, 0],\
+                        [1, 0],\
+                        [1, 0],\
+                        [0, 1],\
+                        [1, 0],\
+                        [0, 1],\
+                        [0, 1],\
+                        [1, 1] ] )
+
+    # Just use the same set for testing
+    testX = trainX
+    testY = trainY
+
+    return trainX, trainY, testX, testY

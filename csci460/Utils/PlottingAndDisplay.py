@@ -46,13 +46,25 @@ def Plot2DConceptMap(dataRange, mapResolution, predictorFunction,\
 
   image = np.reshape(np.zeros(mapResolution**2), (mapResolution, mapResolution) )
 
+  blah = False
   for x1dx in range(mapResolution):
     for x2dx in range(mapResolution):
       x1 = (maxRange - minRange) * (x1dx/mapResolution) + minRange
       x2 = (maxRange - minRange) * (x2dx/mapResolution) + minRange
       y = np.round( predictorFunction( np.array([[x1,x2]]) ) )
 
+      # If there's just one output, then anything bigger than
+      # one is in the class
       yClass = (np.max(y) > 0.5)
+
+      # But maybe we're using softmax, in which case, let's
+      # check the second dim to see if it's prob>0.5
+      try:
+          yClass = (y[0][1] > 0.5)
+      except:
+          pass
+
+      # I added zero to turn bool into int
       image[x1dx,x2dx] = (0+yClass)
 
   plt.imshow(image, cmap='gray')
