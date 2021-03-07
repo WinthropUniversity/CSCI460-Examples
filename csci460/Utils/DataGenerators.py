@@ -65,13 +65,12 @@ def GenerateXOR():
     return trainX, trainY, testX, testY
 
 
-
 def GenerateAdder():
     """
     This returns a training set and labels for data representing
-    a simple Boolean logic table for the one-bit adder.  It also
-    generates some synthetic "test" data by assuming any point
-    in the top-left or bottom-right quadrants are positive.
+    a simple Boolean logic table for the one-bit adder.  It returns
+    the training set for testing since there is no real test data
+    here.
     """
     # Training instance data
                       # x1, x2, cin
@@ -100,3 +99,21 @@ def GenerateAdder():
     testY = trainY
 
     return trainX, trainY, testX, testY
+
+
+def GenerateLinearlySeparableData(m=100, testSplit=0.80):
+    x1p = np.random.uniform(size=int(m/2))
+    x1n = np.random.uniform(size=int(m/2))
+
+    x2p = +0.1 + x1p + np.abs(np.random.normal(size=int(m/2))) # above y=x
+    x2n = -0.1 + x1n - np.abs(np.random.normal(size=int(m/2))) # below y=x
+
+    y1 = np.array([1]*int(m/2))
+    y2 = np.array([0]*int(m/2))
+
+    x1 = np.append( x1p, x1n )
+    x2 = np.append( x2p, x2n)
+    Xpts = np.array([x1,x2]).transpose()
+    Ypts = np.append(y1,y2)
+
+    return sklearnmodels.train_test_split(Xpts, Ypts, test_size=testSplit)

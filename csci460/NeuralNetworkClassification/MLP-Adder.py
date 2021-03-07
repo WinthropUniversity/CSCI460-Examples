@@ -65,3 +65,6 @@ lossOverTime = trainingHistory.history['loss']
 plotting.PlotTrainingPerformance(lossOverTime,\
                                  "../../data/Adder-MNIST-TrainingPerf.pdf",\
                                  ylab="MSE")
+model.save("../../data/MLP-Adder-Model")
+print("Layer 1 weights: ", model.layers[0].get_weights())
+print("Layer 2 weights: ", model.layers[1].get_weights())

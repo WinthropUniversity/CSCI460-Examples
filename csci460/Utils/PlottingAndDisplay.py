@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 
 
 # Use this to see what a character looks like.
@@ -34,23 +35,23 @@ def PlotTrainingPerformance(trainingPerformance, pdfFilename,\
 
 
 def Plot2DConceptMap(dataRange, mapResolution, predictorFunction,\
-                     pdfFilename="conceptmap.pdf"):
+                     pdfFilename="conceptmap.pdf", data=None):
   """
   This function produces a concept map for a potential 2D space.
   The map will query a grid of mapResolution by mapResolution,
   coloring all points in the class as black and leaving the rest
   white.
   """
-  maxRange = np.ceil(max(dataRange))
-  minRange = np.floor(min(dataRange))
-
   image = np.reshape(np.zeros(mapResolution**2), (mapResolution, mapResolution) )
+  #xticks = np.linspace(min(df['X1']), max(df['X1']), mapResolution)
+  #yticks = np.linspace(min(df['X2']), max(df['X2']), mapResolution)
+  xticks = np.linspace(min(dataRange), max(dataRange), mapResolution)
+  yticks = np.linspace(min(dataRange), max(dataRange), mapResolution)
 
-  blah = False
   for x1dx in range(mapResolution):
     for x2dx in range(mapResolution):
-      x1 = (maxRange - minRange) * (x1dx/mapResolution) + minRange
-      x2 = (maxRange - minRange) * (x2dx/mapResolution) + minRange
+      x1 = xticks[x1dx]
+      x2 = yticks[x2dx]
       y = np.round( predictorFunction( np.array([[x1,x2]]) ) )
 
       # If there's just one output, then anything bigger than
@@ -65,9 +66,18 @@ def Plot2DConceptMap(dataRange, mapResolution, predictorFunction,\
           pass
 
       # I added zero to turn bool into int
-      image[x1dx,x2dx] = (0+yClass)
+      image[x2dx,x1dx] = (0+yClass)
 
-  plt.imshow(image, cmap='gray')
+  plt.pcolor(xticks, yticks, image, cmap='gray')
+
+  if (not data == None):
+      trainX, trainY = data
+      colors = {0:'lightblue', 1:'darkred'}
+      df = pd.DataFrame({"X1":trainX[:,0],\
+                         "X2":trainX[:,1],\
+                         "Class":trainY})
+      plt.scatter(df['X1'], df['X2'], color=df['Class'].map(colors))
+
   plt.savefig(pdfFilename)
 
   print()

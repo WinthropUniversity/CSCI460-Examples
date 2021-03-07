@@ -17,7 +17,7 @@ testX  = testX / scaleFactor
 
 
 ### 2) Build and learn the model:
-rbf_model = svm.SVR(kernel='rbf', C=50, gamma=25)
+rbf_model = svm.SVC(kernel='rbf', C=50, gamma=25)
 rbf_fit   = rbf_model.fit(trainX, trainY)
 
 ### 3) Evaluate the model
@@ -33,4 +33,5 @@ print()
 plotting.Plot2DConceptMap( (np.max(trainX), np.min(trainX)),\
                            100,\
                            rbf_fit.predict,\
-                           "../../data/svm-conceptmap.png")
+                           "../../data/svm-conceptmap.png",
+                           data=(trainX, trainY))
