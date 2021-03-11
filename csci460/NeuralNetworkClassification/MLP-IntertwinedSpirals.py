@@ -86,6 +86,7 @@ model.evaluate(testX, testY)
 
 
 ### 5) Show the Concept Map
-plotting.Plot2DConceptMap( (np.max(trainX), np.min(trainX))),\
+plotting.Plot2DConceptMap( (np.max(trainX), np.min(trainX)),\
                            100,\
+                           "../../data/svm-conceptmap.png",\
                            model)

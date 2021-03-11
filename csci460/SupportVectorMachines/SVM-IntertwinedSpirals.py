@@ -17,7 +17,7 @@ testX  = testX / scaleFactor
 
 
 ### 2) Build and learn the model:
-rbf_model = svm.SVC(kernel='rbf', C=50, gamma=25)
+rbf_model = svm.SVC(kernel='rbf', C=50, gamma=50)
 rbf_fit   = rbf_model.fit(trainX, trainY)
 
 ### 3) Evaluate the model
