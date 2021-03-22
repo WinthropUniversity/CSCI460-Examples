@@ -44,8 +44,8 @@ model = tf.keras.models.Sequential()
 # Add a convolutional layer that takes in tensors 28x28x1, and reads
 # it using 70 filters of size 3x3.  Make the activation function
 # a rectified linear unit.
-model.add( tf.keras.layers.Conv2D(70,\     # Learn 70 filters
-                                  (3, 3),\ # Each filter is 3x3
+model.add( tf.keras.layers.Conv2D(70,\
+                                  (3, 3),\
                                   activation="relu",\
                                   input_shape=(28, 28, 1)) )
 
