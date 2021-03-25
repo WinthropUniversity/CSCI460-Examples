@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import sklearn.model_selection as sklearnmodels
 
 
@@ -117,3 +118,22 @@ def GenerateLinearlySeparableData(m=100, testSplit=0.80):
     Ypts = np.append(y1,y2)
 
     return sklearnmodels.train_test_split(Xpts, Ypts, test_size=testSplit)
+
+
+def GenerateRedundantDF(m=100):
+    # There are only really two dimensions to this dataset
+    x = np.random.normal(size=m)
+    y = np.random.normal(size=m)
+
+    # But we'll trick the caller into thinking there are
+    # four different dimensions by combining the above dimensions.
+    a =  1*x*y + 2*x - 1*y + 2
+    b =  3*x*y - 1*x - 3*y - 4
+    c = -2*x*y - 3*x + 2*y + 1
+    d =  2*x*y - 2*x + 1*y - 3
+
+    # Convert that into a Pandas data frame
+    return pd.DataFrame({'A':a,\
+                         'B':b,\
+                         'C':c,\
+                         'D':d})

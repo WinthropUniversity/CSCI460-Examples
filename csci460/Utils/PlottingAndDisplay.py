@@ -96,3 +96,44 @@ def SaveImage(image, filename, colormap=None):
       plt.imshow(image, cmap=colormap)
 
     plt.savefig(filename)
+
+
+def ScreePlot(pca, pdfFilename="../../data/scree-plot.png"):
+  """
+  Given the PCA tool object that has been fit to data, plot the normalized
+  absolute value of the Eigenvalues (explained variance) in order from 1st
+  principle component to last.  This provides a sense of how many dimensions
+  are needed to explain the majority of the variance in the data.
+  """
+  PC_values = np.arange(pca.n_components_) + 1
+  plt.plot(PC_values, pca.explained_variance_ratio_, 'ro-', linewidth=2)
+  plt.title('Scree Plot')
+  plt.xlabel('Principal Component')
+  plt.ylabel('Proportion of Variance Explained')
+  plt.savefig(pdfFilename)
+
+
+def FirstTwoPrinCompScatter(pca, df, pdfFilename="../../data/prcomp-plot.png"):
+  """
+  Given the PCA tool object that has been fit to data, and the data,
+  transform the original data by each of the first two principle components,
+  then scatterplot those data.
+  """
+  # Get the $m-by-d$ data matrix from the Pandas data frame
+  X = df.to_numpy()
+
+  # Create a d-by-2 matrix of the loading vectors for the first two princ. comp.
+  PC = pca.components_[0:2].T
+
+  print("shape(X): ", np.shape(X))
+  print("shape(PC): ", np.shape(PC))
+  # Multiply the m-by-d data matrix by the d-by-2 PC matrix.
+  # The result is a *new* data matrix where each of the m points
+  # now exist in a 2-dim vector space in which much of the variance is explained
+  newX = np.matmul(X,PC)
+
+  plt.scatter(newX[:,0], newX[:,1])
+  plt.title('Scatter Plot of Data Transformed by First two PCs')
+  plt.xlabel('PC 1, Trans')
+  plt.ylabel('PC 2, Trans')
+  plt.savefig(pdfFilename)
