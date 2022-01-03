@@ -1,4 +1,4 @@
-# Example Source Code for Winthrop's CSCI460X, Machine Learning Course
+# Example Source Code for Winthrop's CSCI460, Machine Learning Course
 
 This public repo contains examples we're using in our Machine Learning class.  To get them to work, you'll need to add the examples directory to your *PYTHONPATH*:
 
