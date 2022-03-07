@@ -64,9 +64,9 @@ model.evaluate(testX, testY)
 
 # Get the loss over time from the training history
 lossOverTime = trainingHistory.history['loss']
-plotting.PlotTrainingPerformance(lossOverTime,\
-                                 "../../data/XOR-MNIST-TrainingPerf.pdf",\
-                                 ylab="Cross Entropy")
+#plotting.PlotTrainingPerformance(lossOverTime,\
+#                                 "../../data/XOR-MNIST-TrainingPerf.pdf",\
+#                                 ylab="Cross Entropy")
 ### 5) Show the Concept Map
 plotting.Plot2DConceptMap( (-1, 1),\
                            100,\

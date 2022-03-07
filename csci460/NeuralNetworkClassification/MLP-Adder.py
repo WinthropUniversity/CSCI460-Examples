@@ -43,7 +43,7 @@ model.compile( optimizer="AdaMax", loss="MSE", metrics=["accuracy"] )
 
 # Now perform the induction (i.e., learning, training, etc.)
 # Remember the history of the training performance
-trainingHistory = model.fit(trainX, trainY, epochs=10000)
+trainingHistory = model.fit(trainX, trainY, epochs=1000)
 
 
 ### 4) Evaluate the Model on a Test Data
