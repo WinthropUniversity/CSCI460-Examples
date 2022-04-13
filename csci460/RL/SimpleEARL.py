@@ -49,6 +49,11 @@ def DecodeIndividual(env, individual):
     return ruleDict
 
 
+# OneMAX
+def EvaluateIndividualAlt(env, individual, maxNumSteps):
+    return np.sum(individual)
+
+# Run our Frozen Lakes simulation
 def EvaluateIndividual(env, individual, maxNumSteps):
     fitness = 0
     agentPolicy = DecodeIndividual(env, individual)
@@ -58,7 +63,14 @@ def EvaluateIndividual(env, individual, maxNumSteps):
     for _ in range(maxNumSteps):
         action = agentPolicy[state]
         newState, reward, done, info = env.step(action)
-        fitness += reward
+
+        # Oh no!  I fell in a hole.  Punish the agent!!
+        if done and (reward == 0):
+            fitness -= 1
+
+        # Yay!  I found the goal
+        elif done and (reward > 0):
+            fitness += 10
 
         # If the episode is over, reset the sim, otherwise update the state
         if done:
@@ -108,7 +120,8 @@ for genCount in range(maxNumGenerations):
     child = MutateIndividual(parent, pm)
     childFitness = EvaluateIndividual(env, child, maxNumSteps)
 
-    if (childFitness >= parentFitness):
+    draw = np.random.uniform()
+    if (childFitness >= parentFitness) and (draw < 0.9):
         parent = child
         parentFitness = childFitness
 

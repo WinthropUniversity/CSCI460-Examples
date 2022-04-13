@@ -11,6 +11,7 @@ while (True):
     env.render()
 
     print()
+    print("You are in state: ", state)
     print("Actions include [0-{:d}]".format(env.action_space.n))
     print("  0-Left, 1-Down, 2-Right, 3-Up, 4-quit")
     action = int(input("Choose Action: "))
