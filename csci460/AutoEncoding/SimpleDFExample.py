@@ -62,8 +62,8 @@ def BuildDecoder(latentDim, imageWidth, imageHeight):
     decLayer2 = tf.keras.layers.Reshape( (subWidth1, subHeight1, colorChannels) )
     decLayer3 = tf.keras.layers.UpSampling3D( (upScale1, upScale1, 1) )
     outputLayer = tf.keras.layers.Conv2D(colorChannels, (4, 4), padding="same",\
-                                      #kernel_regularizer=tf.keras.regularizers.l1(0.01),\
-                                      #activity_regularizer=tf.keras.regularizers.l2(0.01),\
+    #                                  kernel_regularizer=tf.keras.regularizers.l1(0.01),\
+    #                                  activity_regularizer=tf.keras.regularizers.l2(0.01),\
                                       activation="sigmoid")
     #decLayer5 = tf.keras.layers.UpSampling3D( (upScale2, upScale2, 1) )
     #outputLayer = tf.keras.layers.Conv2D(colorChannels, (3, 3), padding="same", activation="sigmoid")
@@ -80,25 +80,32 @@ def BuildDecoder(latentDim, imageWidth, imageHeight):
 
     return model
 
-latentDim = 100
+latentDim = 200
 
 ### 1) Get the Data
 
 # Read the first image and make a training dataset for it, call it "A"
-imageA = tf.image.decode_png(tf.io.read_file("../../data/rpw-400x400.png"), channels=3)
+rawImage = tf.keras.preprocessing.image.load_img("rpw-face.png", target_size=(100,100))
+imageA = tf.keras.preprocessing.image.img_to_array(rawImage)
 print(tf.shape(imageA))
 
-(width, height, _) = tf.shape(imageA)
-print("Image A is: ", width, "by", height)
+width = 100
+height = 100
 imagesA = tf.reshape( [imageA], (1,width,height,3))
 trainA = tf.cast(imagesA, 'float32') / 255.0
 
+print("YAY!! One image loaded!!")
+
 # Read the second image and make a training set for it, call it "B"
-imageB = tf.image.decode_png(tf.io.read_file("../../data/mattsmith-400x400.png"), channels=3)
+rawImage = tf.keras.preprocessing.image.load_img("knuth-face.png", target_size=(100,100))
+imageB = tf.keras.preprocessing.image.img_to_array(rawImage)
 imagesB = tf.reshape( [imageB], (1,width,height,3))
 trainB = tf.cast(imagesB, 'float32') / 255.0
 (widthB, heightB, _) = tf.shape(imageB)
 print("Image B is: ", widthB, "by", heightB)
+
+print("YAY!! Another image loaded!!")
+
 
 # Assume A and B are the same dimesions for this silly, simple example
 
