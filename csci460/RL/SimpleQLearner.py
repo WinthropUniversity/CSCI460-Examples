@@ -32,23 +32,55 @@ def ChooseAction(Q, state, temp):
     return np.random.choice(actions, size=None, replace=True, p=values)
 
 
-env = gym.make("Taxi-v3")
-state = env.reset()
+def RunSimulation(env, maxNumSteps, Q, temperature, discount):
+    # Reset the env
+    state = env.reset()
+
+    # Take as many steps as requested
+    for _ in range(maxNumSteps):
+        # Choose an action, take a step
+        action = ChooseAction(Q, state, temperature)
+        newState, reward, done, info = env.step(action)
+
+        # Use the observed reward and new state to update the Q table approx.
+        UpdateQTable(Q, state, action, reward, discount, newState)
+
+        # If the episode is over, reset the sim, otherwise update the state
+        if done:
+            state = env.reset()
+            #temperature = np.max(0.9 * temperature, 1) # anneal temp
+        else:
+            state = newState
+
+
+# Ugly global variables
+#envName = "Taxi-v3"
+envName = "FrozenLake-v0"
+env = gym.make(envName, is_slippery=False)
+
 Q = ResetQTable(env)
-temperature = 1
+temperature = 100
 discount = 0.9
+maxNumSteps = 1000000
 
-for _ in range(50000):
-    action = ChooseAction(Q, state, temperature)
-    newState, reward, done, info = env.step(action)
-    UpdateQTable(Q, state, action, reward, discount, newState)
+# Learn, Agent, Learn!!
+print()
+print("Running our Q-Learner for", maxNumSteps, "steps on", envName, "...")
+RunSimulation(env, maxNumSteps, Q, temperature, discount)
 
-    if done:
-        state = env.reset()
-    else:
-        state = newState
-
-for s in range(500):
-    for a in range(6):
-        print(Q[s,a],'\t', end='')
+# Report the Q-Table now
+print()
+print("Q-Table:")
+for s in range(Q.shape[0]):
+    for a in range(Q.shape[1]):
+        print("{:9.3f}".format(Q[s,a]), end='')
     print()
+
+# Report the policy found:
+print()
+print("Best policy:")
+for state in range(Q.shape[0]):
+    envState  = state #env.observation_space[state]
+    envAction = np.argmax(Q[state]) #env.action_space[np.argmax(Q[state])]
+    print("  ", envState, "::", envAction)
+print()
