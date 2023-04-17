@@ -59,10 +59,10 @@ def EvaluateIndividual(env, individual, maxNumSteps):
     agentPolicy = DecodeIndividual(env, individual)
 
     # Run the sim
-    state = env.reset()
+    state = env.reset()[0]
     for _ in range(maxNumSteps):
         action = agentPolicy[state]
-        newState, reward, done, info = env.step(action)
+        newState, reward, done, truncate, info = env.step(action)
 
         # Oh no!  I fell in a hole.  Punish the agent!!
         if done and (reward == 0):
@@ -74,7 +74,7 @@ def EvaluateIndividual(env, individual, maxNumSteps):
 
         # If the episode is over, reset the sim, otherwise update the state
         if done:
-            state = env.reset()
+            state = env.reset()[0]
         else:
             state = newState
 
@@ -97,8 +97,10 @@ maxNumSteps = 1000
 maxNumGenerations = int(1000000/maxNumSteps) # To be fair, use the same total number as in QL
 
 #envName = "Taxi-v3"
-envName = "FrozenLake-v0"
-env = gym.make(envName, is_slippery=False)
+envName = "FrozenLake-v1"
+env = gym.make(envName, is_slippery=False, render_mode="ansi")
+env.reset()
+print(env.render())
 
 # Initialize the first individual
 parent = InitializeIndividual(env)
@@ -135,3 +137,6 @@ for state in bestPolicy:
     print("  ", envState, "::", envAction)
 print("Best Fitness:", parentFitness)
 print()
+
+env.reset()
+print(env.render())

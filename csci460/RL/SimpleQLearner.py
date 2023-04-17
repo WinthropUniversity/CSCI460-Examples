@@ -19,7 +19,7 @@ def UpdateQTable(Q, state, action, reward, discount, newState):
     Q[state, action] = val
 
 
-def ChooseAction(Q, state, temp):
+def ChooseAction(Q, env, state, temp):
     """
     Choose an action probabilistically using the Boltzman equation based
     on the values in the current approximation of the Q table.  The 'temp'
@@ -34,53 +34,63 @@ def ChooseAction(Q, state, temp):
 
 def RunSimulation(env, maxNumSteps, Q, temperature, discount):
     # Reset the env
-    state = env.reset()
+    state = env.reset()[0]
 
     # Take as many steps as requested
-    for _ in range(maxNumSteps):
+    for stepIdx in range(maxNumSteps):
         # Choose an action, take a step
-        action = ChooseAction(Q, state, temperature)
-        newState, reward, done, info = env.step(action)
+        action = ChooseAction(Q, env, state, temperature)
+        newState, reward, done, truncated, info = env.step(action)
 
         # Use the observed reward and new state to update the Q table approx.
         UpdateQTable(Q, state, action, reward, discount, newState)
 
         # If the episode is over, reset the sim, otherwise update the state
         if done:
-            state = env.reset()
+            state = env.reset()[0]
             #temperature = np.max(0.9 * temperature, 1) # anneal temp
         else:
             state = newState
 
 
-# Ugly global variables
-#envName = "Taxi-v3"
-envName = "FrozenLake-v0"
-env = gym.make(envName, is_slippery=False)
+def main():
+    # Ugly global variables
+    #envName = "Taxi-v3"
+    envName = "FrozenLake-v1"
+    env = gym.make(envName, is_slippery=False, render_mode="ansi")
+    env.reset()
+    print(env.render())
 
-Q = ResetQTable(env)
-temperature = 100
-discount = 0.9
-maxNumSteps = 1000000
+    Q = ResetQTable(env)
+    temperature = 100
+    discount = 0.9
+    maxNumSteps = 100000
 
-# Learn, Agent, Learn!!
-print()
-print("Running our Q-Learner for", maxNumSteps, "steps on", envName, "...")
-RunSimulation(env, maxNumSteps, Q, temperature, discount)
+    # Learn, Agent, Learn!!
+    print()
+    print("Running our Q-Learner for", maxNumSteps, "steps on", envName, "...")
+    RunSimulation(env, maxNumSteps, Q, temperature, discount)
 
-# Report the Q-Table now
-print()
-print("Q-Table:")
-for s in range(Q.shape[0]):
-    for a in range(Q.shape[1]):
-        print("{:9.3f}".format(Q[s,a]), end='')
+    # Report the Q-Table now
+    print()
+    print("Q-Table:")
+    for s in range(Q.shape[0]):
+        for a in range(Q.shape[1]):
+            print("{:9.3f}".format(Q[s,a]), end='')
+        print()
+
+    # Report the policy found:
+    print()
+    print("Best policy:")
+    for state in range(Q.shape[0]):
+        envState  = state #env.observation_space[state]
+        envAction = np.argmax(Q[state]) #env.action_space[np.argmax(Q[state])]
+        print("  ", envState, "::", envAction)
     print()
 
-# Report the policy found:
-print()
-print("Best policy:")
-for state in range(Q.shape[0]):
-    envState  = state #env.observation_space[state]
-    envAction = np.argmax(Q[state]) #env.action_space[np.argmax(Q[state])]
-    print("  ", envState, "::", envAction)
-print()
+    env.reset()
+    print(env.render())
+
+
+if __name__ == "__main__":
+    main()
