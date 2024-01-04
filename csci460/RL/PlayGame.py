@@ -2,13 +2,13 @@ import numpy as np
 import gym
 
 
-envName = "FrozenLake-v0"
+envName = "FrozenLake-v1"
 # https://gym.openai.com/envs/FrozenLake-v0/
-env = gym.make(envName, is_slippery=False)
-state = env.reset()
+env = gym.make(envName, is_slippery=False, render_mode="ansi")
+state = env.reset()[0]
 
 while (True):
-    env.render()
+    print(env.render())
 
     print()
     print("You are in state: ", state)
@@ -19,14 +19,14 @@ while (True):
     if (action == 4):
         break  # Very, very ugly code here
 
-    state, reward, done, info = env.step(action)
+    state, reward, done, truncate, info = env.step(action)
 
     if reward > 0:
         env.render()
         print("GOOOAAALLLL!!!!  You got rewarded {:f}!".format(reward))
-        state = env.reset()
+        state = env.reset()[0]
 
     elif done:
-        env.render()
+        print(env.render())
         print("Oops.  You fell in a hole.  Start again!")
         state = env.reset()
