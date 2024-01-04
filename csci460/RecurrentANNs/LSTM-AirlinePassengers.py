@@ -33,7 +33,7 @@ def CreateTimeWindows(ds, inputWindow=1, outputWindow=1):
 
 # Use pandas to read the CSV data file in, but then strip just the values out
 # of it because tensorflow doesn't read pandas dataframes directly.
-dataframe = pd.read_csv("../../data/airline-passengers.csv", usecols=[1], engine="python")
+dataframe = pd.read_csv("../../data/processed.cleveland.data", usecols=[1], engine="python")
 dataset = dataframe.values.astype('float32')
 
 # Scale values of the passenger counts between 0 and 1
