@@ -64,7 +64,7 @@ def main():
     Q = ResetQTable(env)
     temperature = 100
     discount = 0.9
-    maxNumSteps = 100000
+    maxNumSteps = 1000000
 
     # Learn, Agent, Learn!!
     print()
