@@ -94,7 +94,8 @@ def GetIndividualAsString(individual):
 
 # Ugly global variables ...
 maxNumSteps = 1000
-maxNumGenerations = int(1000000/maxNumSteps) # To be fair, use the same total number as in QL
+#maxNumGenerations = int(1000000/maxNumSteps) # To be fair, use the same total number as in QL
+maxNumGenerations = 10000 # Who wants to be fair?
 
 #envName = "Taxi-v3"
 envName = "FrozenLake-v1"
@@ -117,7 +118,8 @@ print("Max num steps per eval =", maxNumSteps, ",  Max Generations=", maxNumGene
 print()
 
 for genCount in range(maxNumGenerations):
-    print("Gen:", genCount, ",  Fitness:", parentFitness, ",  ", GetIndividualAsString(parent))
+    if (genCount % 100 == 0):
+      print("Gen:", genCount, ",  Fitness:", parentFitness, ",  ", GetIndividualAsString(parent))
 
     child = MutateIndividual(parent, pm)
     childFitness = EvaluateIndividual(env, child, maxNumSteps)
@@ -134,7 +136,7 @@ bestPolicy = DecodeIndividual(env, parent)
 for state in bestPolicy:
     envState  = state #env.observation_space[state]
     envAction = bestPolicy[state] #env.action_space[bestPolicy[state]]
-    print("  ", envState, "::", envAction)
+    print("  ", envState, "::", envAction, {0:"Left", 1:"Down", 2:"Right", 3:"Up", 4:"quit"}[envAction])
 print("Best Fitness:", parentFitness)
 print()
 

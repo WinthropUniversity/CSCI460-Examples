@@ -1,5 +1,6 @@
 import numpy as np
 import gym
+import sys
 
 
 def ResetQTable(env):
@@ -33,11 +34,18 @@ def ChooseAction(Q, env, state, temp):
 
 
 def RunSimulation(env, maxNumSteps, Q, temperature, discount):
+    gaugeIncr = maxNumSteps / 100
+
     # Reset the env
     state = env.reset()[0]
 
     # Take as many steps as requested
     for stepIdx in range(maxNumSteps):
+        # A little progress gauge
+        if stepIdx % gaugeIncr == 0:
+            sys.stdout.write(".")
+            sys.stdout.flush()
+
         # Choose an action, take a step
         action = ChooseAction(Q, env, state, temperature)
         newState, reward, done, truncated, info = env.step(action)
@@ -48,9 +56,14 @@ def RunSimulation(env, maxNumSteps, Q, temperature, discount):
         # If the episode is over, reset the sim, otherwise update the state
         if done:
             state = env.reset()[0]
-            #temperature = np.max(0.9 * temperature, 1) # anneal temp
+            temperature = max(0.99 * temperature, 0.01) # anneal temp
+            #sys.stdout.write("G")
+            #sys.stdout.flush()
         else:
             state = newState
+            #sys.stdout.write(".")
+            #sys.stdout.flush()
+    print()
 
 
 def main():
@@ -64,7 +77,7 @@ def main():
     Q = ResetQTable(env)
     temperature = 100
     discount = 0.9
-    maxNumSteps = 1000000
+    maxNumSteps = 3000000
 
     # Learn, Agent, Learn!!
     print()
@@ -85,7 +98,7 @@ def main():
     for state in range(Q.shape[0]):
         envState  = state #env.observation_space[state]
         envAction = np.argmax(Q[state]) #env.action_space[np.argmax(Q[state])]
-        print("  ", envState, "::", envAction)
+        print("  ", envState, "::", envAction, {0:"Left", 1:"Down", 2:"Right", 3:"Up", 4:"quit"}[envAction])
     print()
 
     env.reset()
