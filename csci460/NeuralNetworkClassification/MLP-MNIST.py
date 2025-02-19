@@ -33,7 +33,8 @@ print(trainY[0])
 model = tf.keras.models.Sequential()
 
 # Flatten the input instances from 28x28 images to 1 big 784 element vector
-model.add( tf.keras.layers.Flatten(input_shape=(28,28)) )
+model.add( tf.keras.layers.Input(shape=(28,28)) )
+model.add( tf.keras.layers.Flatten() )
 
 # Make a middle layer of 200 nodes, each using sigmoid activation
 model.add( tf.keras.layers.Dense(200, activation="sigmoid") )
