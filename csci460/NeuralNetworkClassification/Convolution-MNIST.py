@@ -34,7 +34,7 @@ testX  = testX.reshape( (-1, 28, 28, 1))
 trainY = tf.keras.utils.to_categorical(trainY)
 testY  = tf.keras.utils.to_categorical(testY)
 
-
+   
 
 ### 2) Build the ANN model -- a four-layer CNN
 
@@ -44,21 +44,28 @@ model = tf.keras.models.Sequential()
 # Add a convolutional layer that takes in tensors 28x28x1, and reads
 # it using 70 filters of size 3x3.  Make the activation function
 # a rectified linear unit.
+model.add( tf.keras.layers.Input(shape=(28,28,1)) )
+
 model.add( tf.keras.layers.Conv2D(70,\
                                   (3, 3),\
-                                  activation="relu",\
-                                  input_shape=(28, 28, 1)) )
+                                  activation="relu") )
 
 # Add a layer that finds the maximum value in each 2x2 filter and reduces
 # the image using this pooling method to a smaller image.
-model.add( tf.keras.layers.MaxPooling2D((2, 2)) )
+model.add( tf.keras.layers.MaxPooling2D( (2, 2)) )
+
+model.add( tf.keras.layers.Conv2D(20,\
+                                  (3, 3),\
+                                  activation="relu") )
+model.add( tf.keras.layers.MaxPooling2D( (2, 2)) )
 
 # Maybe we've got the feature selection we need, so flatten the image
 # to a 1D vector.  After this, it's just straight-forward MLP.
 model.add( tf.keras.layers.Flatten() )
 
 # Make a middle layer of 70 nodes, each using rectified linear activation
-model.add( tf.keras.layers.Dense(70, activation="relu") )
+model.add( tf.keras.layers.Dense(100, activation="relu") )
+model.add( tf.keras.layers.Dense(25, activation="relu") )
 
 # Make the output size 10. Let's softmax the activation so
 # we get probabilities in the end.
@@ -76,13 +83,13 @@ lossFunction = tf.keras.losses.CategoricalCrossentropy()
 
 # Set the optimizer as a stochastic gradient descent method with
 # a larning rate of 0.01
-opt = tf.keras.optimizers.SGD(lr=0.01)
+opt = tf.keras.optimizers.Adamax() #tf.keras.optimizers.SGD(learning_rate=0.01)
 
 # Set the model for training
 #  * Use stochastic gradient descent for optimization
 #  * Compute loss using sparse categorical cross entropy
 #  * Report the performance during learning using accuracy
-model.compile( optimizer=opt, loss=lossFunction, metrics=['accuracy'])
+model.compile( optimizer=opt, loss=lossFunction, metrics=['MSE', 'MAE', 'accuracy'])
 
 # Perform the induction
 trainingHistory = model.fit(trainX, trainY, epochs=10)
